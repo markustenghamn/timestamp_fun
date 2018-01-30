@@ -1,0 +1,91 @@
+{{template "header.html" .}}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12" style="height:25px;"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Convert between unix timestamp and human readable date</h2>
+            <p>Use <a href="https://timestamp.fun">Timestamp.fun</a> to convert unix/epoch timestamps to dates or dates back to timestamps.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form id="timestampform" method="post" onsubmit="return convertTimeToDate();">
+                <div class="form-group">
+                    <label for="timestamp">Timestamp</label>
+                    <input name="timestamp" type="text" class="form-control" id="timestamp" aria-describedby="timestampHelp" value="{{.timestampVar}}">
+                    <small id="timestampHelp" class="form-text text-muted">A timestamp is the number of seconds from Jan 01 1970 (UTC).</small>
+                </div>
+                <div class="col-xs-12" style="height:25px;"></div>
+                <button type="submit" class="btn btn-primary">Convert to date</button>
+            </form>
+
+        </div>
+        <div class="col-md-6">
+            <form id="dateform" method="post" onsubmit="return convertDateToTime();">
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input name="date" type="text" class="form-control" id="date" aria-describedby="dateHelp" value="{{.dateVar}}">
+                    <small id="dateHelp" class="form-text text-muted">A date is generally easier for humans to read.</small>
+                </div>
+                <div class="col-xs-12" style="height:25px;"></div>
+                <button type="submit" class="btn btn-primary">Convert to timestamp</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="span6">
+                {{template "flash.html" .}}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function convertTimeToDate() {
+            var values = $("#timestampform").serializeArray();
+            var data = {};
+
+            for (i = 0; i < values.length; i++) {
+                    data[values[i].name] = values[i].value;
+            }
+
+            $.ajax({
+                method: "POST",
+                url: "/api/v1/time",
+                data: data
+            }).done(function (obj) {
+                var date = $("#date");
+                date.val(obj.date);
+            });
+            return false;
+        }
+
+
+        function convertDateToTime() {
+            var values = $("#dateform").serializeArray();
+            var data = {};
+
+            for (i = 0; i < values.length; i++) {
+                data[values[i].name] = values[i].value;
+            }
+
+            $.ajax({
+                method: "POST",
+                url: "/api/v1/date",
+                data: data
+            }).done(function (obj) {
+                var timestamp = $("#timestamp");
+                timestamp.val(obj.time);
+            });
+            return false;
+        }
+
+    </script>
+
+</div>
+
+{{template "footer.html" .}}
