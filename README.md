@@ -18,6 +18,6 @@ Then run the following commands in the project directory
 
 `docker build -t timestamp-fun .`
 
-`docker run -it -p 8006:8006 timestamp-fun`
+`docker run -it -p 8007:8007 timestamp-fun`
 
-The app should now be running on http://127.0.0.1:8006
+The app should now be running on http://127.0.0.1:8007
